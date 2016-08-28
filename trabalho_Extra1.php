@@ -2,6 +2,11 @@
 /*
 	Carlos Henrique Reis
 	Universidade Federal de Itajubá
+	Desafio as equipes.
+		Fazer um programa que leia o site: https://icpc.baylor.edu/…/south-america-brazil-first-…/teams
+	E diga quantas escolas diferentes tem e tem que apresentar elas em ordem crescente por seus nomes.
+	Tem que ser em PHP.
+	Pontos: 5 a mais na nota final (não pode exceder 100)
 */
 	header("Content-Type: text/html;  charset=ISO-8859-1",true);
 
