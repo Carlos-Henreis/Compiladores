@@ -11,22 +11,20 @@
 
 	header("Content-Type: text/html;  charset=UTF-8",true);
 
+
 	echo "<br><br><form action=\"index.php\" method=\"post\">
  			<p>Competição: <input type=\"text\" name=\"name\" /></p>
  			<p><input type=\"submit\"/></p>
 		  </form>";
-
 	$string = str_replace(' ', '+', $_POST['name']);
 	$busca = 'http://www.google.com.br/search?gcx=c&ix=c1&sourceid=chrome&ie=UTF-8&q='.$string.'+site:http://www.futebolnacional.com.br/infobol/championship.jsp';
-
 	//Puxa o código_fonte da busca
 	$site = utf8_encode(file_get_contents($busca));
 	//Expressão regular link do retorno da busca 
 	$exrgbusca = "/<h3 class=\"r\"><a href=\"\/url\?q=(.+?)sa=/";
-
-	
-
+	//Pesquisa no código-fonte todas as substrings reconhecidas pela expressão regular.
 	preg_match_all($exrgbusca, $site, $matchesbusca);
+	//tratamento da url da 
 	$url = $matchesbusca[1][0];
 	$url = str_replace('%3F', '?', $url);
 	$url = str_replace('%3D', '=', $url);
@@ -51,6 +49,13 @@
 	preg_match_all($exrgplacar, $site, $matches3);
 	preg_match_all($exrgdata, $site, $matches4);
 	preg_match_all($exrgNomecomp, $site, $matches5);
+	/*Trata os jogos*/
+	//Substitui os '-' por '/' dos times
+	for ($i=0; $i < count($matches1[1]); $i++) { 
+		$matches1[1][$i] = str_replace('-', '/', $matches1[1][$i]);
+		$matches2[1][$i] = str_replace('-', '/', $matches2[1][$i]);
+	}
+
 	//note que alem de capturar a data temos que ver em quantos jogos ocorreram na mesma.
 	//limita as partidas que ocorrram na data
 	$jogosdata = explode ("<tr class=\"data\"><td colspan=\"7\">", $site);
@@ -69,7 +74,7 @@
 		echo $matches1[1][$i]."-".$matches2[1][$i]." ".$matches3[1][$i]."<br>";
 	}
 	//Impressão dos dados tratados
-	$linhas .= $matches5[1][0]."\n";
+	$linhas = $matches5[1][0]."\n";
 	for ($i=0; $i < count($datas); $i++) { 
 		$linhas .= $datas[$i]."\n";
 		$linhas .=  $matches1[1][$i]."-".$matches2[1][$i]." ".$matches3[1][$i]."\n";
